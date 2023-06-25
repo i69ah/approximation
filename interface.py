@@ -45,3 +45,12 @@ class Approximator:
         result = filtered / sample.count()
 
         return result, result * error_bound
+
+    def approx_max(self, col_name: str, value, preferred_error_bound: float) -> tuple[float, float]:
+        if preferred_error_bound < 0 or preferred_error_bound > 1:
+            raise ValueError('preferred_error_bound must be between 0 and 1')
+
+        data_frame: DataFrame = self.storage.get_data_frame()
+        sample, _, _, error_bound = approx(data_frame.select(col_name), preferred_error_bound=preferred_error_bound)
+
+        return sample.max(), sample.max() * error_bound
